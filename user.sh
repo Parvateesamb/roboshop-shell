@@ -26,12 +26,12 @@ rm -fr /app/* &>>${log_file}
 status_check $?
 
 print_head "Downloading App content"
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>${log_file}
+curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user.zip &>>${log_file}
 cd /app
 status_check $?
 
 print_head "Extracting App content"
-unzip /tmp/catalogue.zip &>>${log_file}
+unzip /tmp/user.zip &>>${log_file}
 status_check $?
 
 print_head "Installing NodeJS Dependencies"
@@ -39,19 +39,19 @@ npm install &>>${log_file}
 status_check $?
 
 print_head "Copy Systemd Service file"
-cp ${code_dir}/configs/catalogue.service /etc/systemd/system/catalogue.service &>>${log_file}
+cp ${code_dir}/configs/user.service /etc/systemd/system/user.service &>>${log_file}
 status_check $?
 
 print_head "Reload Systemd"
 systemctl daemon-reload &>>${log_file}
 status_check $?
 
-print_head "Enable Catalogue service"
-systemctl enable catalogue &>>${log_file}
+print_head "Enable User service"
+systemctl enable user &>>${log_file}
 status_check $?
 
-print_head "Start Catalogue Service"
-systemctl start catalogue &>>${log_file}
+print_head "Start User Service"
+systemctl start user &>>${log_file}
 status_check $?
 
 print_head "Copy MongoDB Repo file"
@@ -63,5 +63,5 @@ yum install mongodb-org-shell -y &>>${log_file}
 status_check $?
 
 print_head "Load Schema"
-mongo --host mongodb.parudevops.link </app/schema/catalogue.js &>>${log_file}
+mongo --host mongodb.parudevops.link </app/schema/user.js &>>${log_file}
 status_check $?
